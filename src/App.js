@@ -35,25 +35,33 @@ class App extends React.Component {
       )
   }
 
-  overClick(e){
+  overClick=(e)=>{
 
       e.target.style="cursor:pointer;text-decoration:underline;"
   }
 
-  handleClick(e){
-    console.log(e.target.parentElement);
-    e.target.parentElement.querySelector(".nested").classList.toggle("active");
-    e.target.classList.toggle("caret-down");
-    console.log(e.target.parentElement.getAttribute("title"))
+  handleClicker=(e)=>{
+      
+      var disval=e.target.textContent;
+      var dbval=e.target.parentElement.getAttribute("title");
+      console.log(disval);
+      console.log(dbval);
+      this.props.onClick(disval,dbval);
   }
 
-  handleClick2(e){
+  handleClick=(e)=>{
+    e.target.parentElement.querySelector(".nested").classList.toggle("active");
+    e.target.classList.toggle("caret-down");
+    //this.props.onClick(e.target.parentElement.getAttribute("title"));
+  }
+
+  handleClick2=(e)=>{
     // console.log(e.target.parentElement);
     e.target.parentElement.querySelector(".nested").classList.toggle("active");
     e.target.classList.toggle("caret-down");
   }
 
-  outClick(e){
+  outClick=(e)=>{
       e.target.style="text-decoration:none";
       
   }
@@ -64,7 +72,7 @@ class App extends React.Component {
  
       return Object.keys(item).map((element) => {
        return (element=="none") ? 
-          item["none"].map( el => <li key={el} title={txt.concat('|',el)}><span class="caret" onClick={this.handleClick} onMouseOver={this.overClick} onMouseOut={this.outClick}>{el}</span></li>)
+          item["none"].map( el => <li key={el} title={txt.concat('|',el)}><span class="caret" onClick={this.handleClicker} onMouseOver={this.overClick} onMouseOut={this.outClick}>{el}</span></li>)
         :
          <li key={element} title={(txt!='')?txt.concat('|',element):element}><span class="caret" onClick={this.handleClick} onMouseOver={this.overClick} onMouseOut={this.outClick}>{element}</span><ul class="nested">{ligen(item[element],(txt!='')?txt.concat('|',element):element)}</ul></li>;
         
