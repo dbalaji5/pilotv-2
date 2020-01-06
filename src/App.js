@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {Collapse} from 'react-collapse';
 
 class App extends React.Component {
   constructor(props) {
@@ -36,9 +35,27 @@ class App extends React.Component {
       )
   }
 
-  handleClick(e){
+  overClick(e){
 
-     alert(e);
+      e.target.style="cursor:pointer;text-decoration:underline;"
+  }
+
+  handleClick(e){
+    console.log(e.target.parentElement);
+    e.target.parentElement.querySelector(".nested").classList.toggle("active");
+    e.target.classList.toggle("caret-down");
+    console.log(e.target.parentElement.getAttribute("title"))
+  }
+
+  handleClick2(e){
+    // console.log(e.target.parentElement);
+    e.target.parentElement.querySelector(".nested").classList.toggle("active");
+    e.target.classList.toggle("caret-down");
+  }
+
+  outClick(e){
+      e.target.style="text-decoration:none";
+      
   }
 
   render() {
@@ -47,9 +64,9 @@ class App extends React.Component {
  
       return Object.keys(item).map((element) => {
        return (element=="none") ? 
-          item["none"].map( el => <li key={el} value={txt.concat('|',el)}>{el}</li>)
+          item["none"].map( el => <li key={el} title={txt.concat('|',el)}><span class="caret" onClick={this.handleClick} onMouseOver={this.overClick} onMouseOut={this.outClick}>{el}</span></li>)
         :
-         <li key={element} value={(txt!='')?txt.concat('|',element):element}>{element}<ul>{ligen(item[element],(txt!='')?txt.concat('|',element):element)}</ul></li>;
+         <li key={element} title={(txt!='')?txt.concat('|',element):element}><span class="caret" onClick={this.handleClick} onMouseOver={this.overClick} onMouseOut={this.outClick}>{element}</span><ul class="nested">{ligen(item[element],(txt!='')?txt.concat('|',element):element)}</ul></li>;
         
       })
     })
@@ -58,9 +75,9 @@ class App extends React.Component {
       return Object.keys(item).map((element) => {
 
           return (element=="none") ?
-            item[element].map( el => <li key={el}>{el}</li>)
+            item[element].map( el => <li key={el}><span class="caret" onClick={this.handleClick2} onMouseOver={this.overClick} onMouseOut={this.outClick}>{el}</span></li>)
           :
-          <li key={element}>{element}<ul>{(Array.isArray(item[element]))?item[element].filter(el => el!=" ").map( el => <li key={el}>{el}</li>):ligen2(item[element])}</ul></li>;
+          <li key={element}><span class="caret" onClick={this.handleClick2} onMouseOver={this.overClick} onMouseOut={this.outClick}>{element}</span><ul class="nested">{(Array.isArray(item[element]))?item[element].filter(el => el!=" ").map( el => <li key={el}><span class="caret" onClick={this.handleClick2} onMouseOver={this.overClick} onMouseOut={this.outClick}>{el}</span></li>):ligen2(item[element])}</ul></li>;
       })
     })
     const { error, isLoaded, items } = this.state;
@@ -76,9 +93,9 @@ class App extends React.Component {
       
       <ul>
         
-        <li onClick={this.handleClick()}>Demographics
+        <li title="demo"><span class="caret" onClick={this.handleClick} onMouseOver={this.overClick} onMouseOut={this.outClick}>Demographics</span>
         
-            <ul>
+            <ul class="nested">
               
                {list1}
               
@@ -86,10 +103,11 @@ class App extends React.Component {
         
         </li>
         {list2}
-        <li> Crime
-            <ul>
+        <li><span class="caret" onClick={this.handleClick2} onMouseOver={this.overClick} onMouseOut={this.outClick}> Crime</span>
+            <ul class="nested">
 
               {list3}
+              
             </ul>
 
         </li>
