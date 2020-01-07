@@ -7,6 +7,7 @@ import App from './App.js'
 import Loader from './Loader.js'
 import 'leaflet/dist/leaflet.css';
 import Interpreter from './Interpreter.js';
+import {ArrowUpMinor} from '@shopify/polaris-icons';
 
 class DashBoard extends React.Component{
     constructor(props){
@@ -14,7 +15,8 @@ class DashBoard extends React.Component{
         this.state = {
 
              display: [],
-             dbdata: []
+             dbdata: [],
+             source: []
         }
     }
 
@@ -31,18 +33,22 @@ class DashBoard extends React.Component{
         if(!flag){
           const dbdata=this.state.dbdata;
           dbdata.push(dbval);
+          const source=this.state.source;
+          source.push(ArrowUpMinor)
           const display=this.state.display;
           display.push(disval);
           this.setState({
               display: display,
-              dbdata: dbdata
+              dbdata: dbdata,
+              source:source
           });
        }
     };
     clearArray = () =>{
        const display=[]
        const dbdata=[]
-       this.setState({display:display,dbdata:dbdata});
+       const source=[]
+       this.setState({display:display,dbdata:dbdata,source:source});
     };
 
   render(){
@@ -70,7 +76,7 @@ class DashBoard extends React.Component{
         </Stack>
       </Card.Section>
       <Card.Section>
-          <Loader data={this.state.display}/>
+          <Loader data={this.state.display} src={this.state.source}/>
        
       </Card.Section>
     </Card>

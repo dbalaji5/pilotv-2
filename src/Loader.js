@@ -1,5 +1,5 @@
 import React from 'react';
-import {Icon,Stack,Button} from '@shopify/polaris';
+import {Stack,Button} from '@shopify/polaris';
 import {ArrowUpMinor,ArrowDownMinor} from '@shopify/polaris-icons';
 
 class Loader extends React.Component{
@@ -11,15 +11,11 @@ class Loader extends React.Component{
         }
     }
 
+
     changeSource=(i)=>{
 
         var source=this.state.source;
-        if(source[i] === ArrowUpMinor){
-            source[i]=ArrowDownMinor
-        }
-        else{
-            source[i]=ArrowUpMinor
-        }
+        (source[i] == ArrowUpMinor)?source[i]=ArrowDownMinor:source[i]=ArrowUpMinor
         this.setState({
             source:source
         });
@@ -27,35 +23,31 @@ class Loader extends React.Component{
 
     componentDidUpdate(oldProps,oldState){
     
-        if(this.props.data !== oldState.data){
-            var source=this.state.source;
-            source.push(ArrowUpMinor)
-            if(this.props.data.length==0){
-                this.setState({
-                    source:[]
-                })
-            }
+        
+        if(this.props.data != oldState.data && this.props.src!=oldState.source){
+
+    
             this.setState({
                 data:this.props.data,
-                source:source
+                source:this.props.src
             });
+            
 
         }
     }
     render(){
-        if(this.state.data.length==0){
+        if(this.state.data.length===0){
             return (
                 <h1>Waiting for the contents</h1>
             );
         }
         return(
             <div> 
-            {this.state.data.map((item,index) =>
+            {this.state.data.map((item,index) => 
                 <Stack>
                 <p key={item}>{item}</p>
                 <Button icon={this.state.source[index]} onClick={()=>this.changeSource(index)}/>
                 </Stack>
-                
             )}
             </div>
         );
