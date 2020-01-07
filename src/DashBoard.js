@@ -27,6 +27,7 @@ class DashBoard extends React.Component{
         console.log(dbdata2);
         const flag=dbdata2.some(val => val === dbval);
         console.log(flag);
+        
         if(!flag){
           const dbdata=this.state.dbdata;
           dbdata.push(dbval);
@@ -39,7 +40,9 @@ class DashBoard extends React.Component{
        }
     };
     clearArray = () =>{
-       this.setState({display:[],displaySet:new Set()});
+       const display=[]
+       const dbdata=[]
+       this.setState({display:display,dbdata:dbdata});
     };
 
   render(){
