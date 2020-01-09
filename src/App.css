@@ -14,6 +14,10 @@
   color: white;
 }
 
+.loader{
+  height: 80%;
+}
+
 .App-intro {
   font-size: large;
 }

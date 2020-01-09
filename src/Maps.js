@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Map, TileLayer, Marker, Popup,LayersControl,GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import diss from '../data/Dissemination.json';
 import '@shopify/polaris/styles.css';
-import {AppProvider, Page, Card,Layout, TextStyle} from '@shopify/polaris';
+import {Card,Layout} from '@shopify/polaris';
 
 
   class Maps extends React.Component{
@@ -44,39 +44,34 @@ import {AppProvider, Page, Card,Layout, TextStyle} from '@shopify/polaris';
 
         }
         return (
-          <Layout.Section oneHalf>
-          <Card title="Visualization" actions={[{content: 'Manage'}]}>
-            <Card.Section>
-              <TextStyle variation="subdued">Map</TextStyle>
-            </Card.Section>
-            <Card.Section title="Items">
-    <Map center={[44.755113, -63.320488]} zoom={9} style={{ height: "50vh" }}>
-        <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
-      />
-      <LayersControl position="topright">
-      
-      <LayersControl.BaseLayer name="grayscale">
-      <GeoJSON 
-        ref="geojson"
-        data={diss}
-        style={style}
-        onEachFeature={onEachFeature.bind(this)}
-      />
-      </LayersControl.BaseLayer>
-      </LayersControl>
-      <Marker position={[51.505, -0.09]}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
+          <Layout.Section oneThird>
+          <Card title="Visualization">
+            <Map center={[44.755113, -63.320488]} zoom={9} style={{ height: "60vh" }}>
+                <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url="http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
+              />
+              <LayersControl position="topright">
+              
+              <LayersControl.BaseLayer name="grayscale">
+              <GeoJSON 
+                ref="geojson"
+                data={diss}
+                style={style}
+                onEachFeature={onEachFeature.bind(this)}
+              />
+              </LayersControl.BaseLayer>
+              </LayersControl>
+              <Marker position={[51.505, -0.09]}>
+                <Popup>
+                  A pretty CSS3 popup. <br /> Easily customizable.
+                </Popup>
+              </Marker>
 
-    </Map>
+            </Map>
 
-    </Card.Section>
-    </Card>
-  </Layout.Section>
+      </Card>
+    </Layout.Section>
   );
     
   };
