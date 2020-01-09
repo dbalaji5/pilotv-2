@@ -1,7 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import '@shopify/polaris/styles.css';
-import {AppProvider, Page, Card,Layout,Button,Stack, TextStyle} from '@shopify/polaris';
+import {AppProvider,Card,Layout,Button,Stack,Scrollable, TextStyle} from '@shopify/polaris';
 import Maps from './Maps.js'
 import App from './App.js'
 import Loader from './Loader.js'
@@ -16,7 +15,10 @@ class DashBoard extends React.Component{
 
              display: [],
              dbdata: [],
-             source: []
+             source: [],
+             category: [],
+             src:[],
+             range:[]
         }
     }
 
@@ -24,11 +26,11 @@ class DashBoard extends React.Component{
     //    console.log(a,b);
     // }
     
-    storeDisplay = (disval,dbval) => {
+    storeDisplay = (disval,dbval,cat) => {
         const dbdata2=this.state.dbdata;
-        console.log(dbdata2);
         const flag=dbdata2.some(val => val === dbval);
         console.log(flag);
+
         
         if(!flag){
           const dbdata=this.state.dbdata;
@@ -37,23 +39,59 @@ class DashBoard extends React.Component{
           source.push(ArrowUpMinor)
           const display=this.state.display;
           display.push(disval);
+          const category2=this.state.category;
+          category2.push(cat);
+          const src=this.state.src;
+          src.push(1);
+          const range=this.state.range;
+          range.push(0);
           this.setState({
               display: display,
               dbdata: dbdata,
-              source:source
+              source:source,
+              src:src,
+              category:category2,
+              range:range
           });
        }
     };
     clearArray = () =>{
-       const display=[]
-       const dbdata=[]
-       const source=[]
-       this.setState({display:display,dbdata:dbdata,source:source});
+       console.log(this.state.src);
+       console.log(this.state.range);
+       const display=[];
+       const dbdata=[];
+       const source=[];
+       const category=[];
+       const src=[];
+       const range=[];
+       this.setState({display:display,dbdata:dbdata,source:source,category:category,src:src,range:range});
     };
+
+    generateArray = () => {
+      console.log(this.state.display);
+      console.log(this.state.dbdata);
+      console.log(this.state.src);
+      console.log(this.state.range);
+      console.log(this.state.category);
+    };
+
+    mutateSource =(src) => {
+
+      this.setState({
+        source:src
+      });
+    }
+    mutateRange =(range) => {
+
+       this.setState({
+          range:range
+       });
+    }
 
   render(){
    return(
   <AppProvider>
+  
   <Layout>
   <Layout.Section oneThird>
     
@@ -62,21 +100,22 @@ class DashBoard extends React.Component{
         <TextStyle variation="subdued">Choose Indicators</TextStyle>
       </Card.Section>
       <Card.Section title="Items">
-          <App onClick={(disval,dbval)=>this.storeDisplay(disval,dbval)}/>
-       
+      <Scrollable shadow style={{height: '60vh'}}>
+          <App onValueChange={(disval,dbval,cat)=>this.storeDisplay(disval,dbval,cat)}/>
+       </Scrollable>
       </Card.Section>
     </Card>
   </Layout.Section>
-  <Layout.Section secondary>
+  <Layout.Section oneThird>
     <Card title="Selector">
       <Card.Section>
         <Stack spacing="loose">
-        <Button primary>Generate</Button>
+        <Button primary onClick={this.generateArray}>Generate</Button>
         <Button primary onClick={this.clearArray}>Clear</Button>
         </Stack>
       </Card.Section>
       <Card.Section>
-          <Loader data={this.state.display} src={this.state.source}/>
+          <Loader data={this.state.display} src={this.state.source} cat={this.state.category} source={this.state.src} range={this.state.range} onSourceChange={(src)=>this.mutateSource(src)} onRangeChange={(range)=> this.mutateRange(range)}/>
        
       </Card.Section>
     </Card>

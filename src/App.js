@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
 
 class App extends React.Component {
@@ -44,9 +43,16 @@ class App extends React.Component {
       
       var disval=e.target.textContent;
       var dbval=e.target.parentElement.getAttribute("title");
-      console.log(disval);
-      console.log(dbval);
-      this.props.onClick(disval,dbval);
+      var category=e.target.getAttribute("title");
+      this.props.onValueChange(disval,dbval,category);
+  }
+
+  handleClicker2=(e)=>{
+      
+    var disval=e.target.textContent;
+    var dbval=e.target.parentElement.getAttribute("title");
+    var category=e.target.getAttribute("title");
+    this.props.onValueChange(disval,dbval,category);
   }
 
   handleClick=(e)=>{
@@ -56,7 +62,6 @@ class App extends React.Component {
   }
 
   handleClick2=(e)=>{
-    // console.log(e.target.parentElement);
     e.target.parentElement.querySelector(".nested").classList.toggle("active");
     e.target.classList.toggle("caret-down");
   }
@@ -71,21 +76,21 @@ class App extends React.Component {
     var ligen=((item,txt) => {
  
       return Object.keys(item).map((element) => {
-       return (element=="none") ? 
-          item["none"].map( el => <li key={el} title={txt.concat('|',el)}><span class="caret" onClick={this.handleClicker} onMouseOver={this.overClick} onMouseOut={this.outClick}>{el}</span></li>)
+       return (element==="none") ? 
+          item["none"].map( el => <li key={el} title={txt.concat('|',el)}><span class="caret" title='demographics' onClick={this.handleClicker} onMouseOver={this.overClick} onMouseOut={this.outClick}>{el}</span></li>)
         :
-         <li key={element} title={(txt!='')?txt.concat('|',element):element}><span class="caret" onClick={this.handleClick} onMouseOver={this.overClick} onMouseOut={this.outClick}>{element}</span><ul class="nested">{ligen(item[element],(txt!='')?txt.concat('|',element):element)}</ul></li>;
+         <li key={element} title={(txt!=='')?txt.concat('|',element):element}><span class="caret" onClick={this.handleClick} onMouseOver={this.overClick} onMouseOut={this.outClick}>{element}</span><ul class="nested">{ligen(item[element],(txt!=='')?txt.concat('|',element):element)}</ul></li>;
         
       })
     })
-    var ligen2=(item => {
+    var ligen2=((item,cat) => {
 
       return Object.keys(item).map((element) => {
 
-          return (element=="none") ?
-            item[element].map( el => <li key={el}><span class="caret" onClick={this.handleClick2} onMouseOver={this.overClick} onMouseOut={this.outClick}>{el}</span></li>)
+          return (element==="none") ?
+            item[element].map( el => <li key={el} title={el}><span class="caret" title={cat} onClick={this.handleClicker2} onMouseOver={this.overClick} onMouseOut={this.outClick}>{el}</span></li>)
           :
-          <li key={element}><span class="caret" onClick={this.handleClick2} onMouseOver={this.overClick} onMouseOut={this.outClick}>{element}</span><ul class="nested">{(Array.isArray(item[element]))?item[element].filter(el => el!=" ").map( el => <li key={el}><span class="caret" onClick={this.handleClick2} onMouseOver={this.overClick} onMouseOut={this.outClick}>{el}</span></li>):ligen2(item[element])}</ul></li>;
+          <li key={element}><span class="caret" onClick={this.handleClick} onMouseOver={this.overClick} onMouseOut={this.outClick}>{element}</span><ul class="nested">{(Array.isArray(item[element]))?item[element].filter(el => el!==" ").map( el => <li key={el} title={el}><span class="caret" title={cat} onClick={this.handleClicker2} onMouseOver={this.overClick} onMouseOut={this.outClick}>{el}</span></li>):ligen2(item[element],cat)}</ul></li>;
       })
     })
     const { error, isLoaded, items } = this.state;
@@ -95,10 +100,10 @@ class App extends React.Component {
       return <div>Loading...</div>;
     } else {
       var list1=ligen(items['dem'],'')
-      var list2=ligen2(items['inc'])
-      var list3=ligen2(items['ret'])
+      var list2=ligen2(items['inc'],'incident')
+      var list3=ligen2(items['ret'],'crime')
       return (
-      
+      <div>
       <ul>
         
         <li title="demo"><span class="caret" onClick={this.handleClick} onMouseOver={this.overClick} onMouseOut={this.outClick}>Demographics</span>
@@ -120,6 +125,7 @@ class App extends React.Component {
 
         </li>
         </ul>
+        </div>
       )
     }
   }
