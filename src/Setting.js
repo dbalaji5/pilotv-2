@@ -1,31 +1,33 @@
 import React,{useCallback, useState}from 'react';
-import {SettingToggle,TextStyle} from '@shopify/polaris';
+import {Stack,RadioButton} from '@shopify/polaris';
 export default function Setting(props) {
-    const [active, setActive] = useState(false);
-  
-    const handleToggle = useCallback(() => {
-        setActive((active) => !active)
-        
-    }, []);
-  
-    const contentStatus = active ? 'Generate' : 'Interpret';
+  const [value, setValue] = useState('generate');
 
-    const textStatus = active ? 'Interpret' : 'Generate';
-  
-    return (
-      <React.Fragment>
-      <SettingToggle
-        action={{
-          content: contentStatus,
-          onAction: handleToggle,
-          
-        }}
-        enabled={active}
-      >
-           The Option Selected is <TextStyle variation="strong" onChange={()=> props.onChange({textStatus})}>{textStatus}</TextStyle>
-      </SettingToggle>
+  const handleChange = useCallback(
+    (_checked, newValue) => 
+    {
+      setValue(newValue)
+      props.onClick(newValue);
+    },
+    [],
+  );
 
-     
-      </React.Fragment>
-    );
-  }
+  return (
+    <Stack>
+      <RadioButton
+        label="Generate"
+        checked={value === 'generate'}
+        id="generate"
+        name="accounts"
+        onChange={handleChange}
+      />
+      <RadioButton
+        label="Interpret"
+        id="interpret"
+        name="accounts"
+        checked={value === 'interpret'}
+        onChange={handleChange}
+      />
+    </Stack>
+  );
+}
