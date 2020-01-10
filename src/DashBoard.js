@@ -102,7 +102,7 @@ class DashBoard extends React.Component{
       if(this.state.category[0]==="demographics"){
           cat="dindex"
       }
-        axios.get('http://localhost:5000/rest/'+cat+'/',{params:res})
+        axios.get('http://vav.research.cs.dal.ca/municipalitybackend/rest/'+cat+'/',{params:res})
         .then(result => {
           console.log(result.data['resu2']);
           console.log(result.data);
