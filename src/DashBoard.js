@@ -7,6 +7,7 @@ import Loader from './Loader.js'
 import 'leaflet/dist/leaflet.css';
 import Interpreter from './Interpreter.js';
 import {ArrowUpMinor} from '@shopify/polaris-icons';
+import axios from 'axios'
 
 class DashBoard extends React.Component{
     constructor(props){
@@ -18,8 +19,14 @@ class DashBoard extends React.Component{
              source: [],
              category: [],
              src:[],
-             range:[]
+             range:[],
+             gendic:[]
         }
+    }
+
+    componentDidMount(){
+
+        
     }
 
     // handleClick(a,b){
@@ -73,6 +80,23 @@ class DashBoard extends React.Component{
       console.log(this.state.src);
       console.log(this.state.range);
       console.log(this.state.category);
+      var res={};
+      for(var i=0;i<this.state.dbdata.length;i++){
+          res[this.state.dbdata[i]]=(this.state.range[i])*(this.state.src[i]);
+      }
+      console.log(res);
+      var cat="index";
+      if(this.state.category[0]==="incident"){
+          cat="incident"
+      }
+      if(this.state.category[0]==="demographics"){
+          cat="dindex"
+      }
+        axios.get('http://localhost:5000/rest/'+cat+'/',{params:res})
+        .then(result => {
+          console.log(result.data['resu2']);
+        })
+
     };
 
     mutateSource =(src) => {
@@ -106,7 +130,7 @@ class DashBoard extends React.Component{
       </Card.Section>
     </Card>
   </Layout.Section>
-  <Layout.Section oneThird>
+  <Layout.Section oneThird secondary>
     <Card title="Selector">
       <Card.Section>
         <Stack spacing="loose">
