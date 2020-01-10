@@ -25,7 +25,7 @@ class DashBoard extends React.Component{
              gendic:[],
              gresult:{},
              gdata:[],
-             status:"Generate"
+             stat:"generate"
         }
     }
 
@@ -39,34 +39,37 @@ class DashBoard extends React.Component{
     // }
     
     storeDisplay = (disval,dbval,cat) => {
-    
-        const dbdata2=this.state.dbdata;
-        const flag=dbdata2.some(val => val === dbval);
-        console.log(flag);
 
-        
-        if(!flag){
-          const dbdata=this.state.dbdata;
-          dbdata.push(dbval);
-          const source=this.state.source;
-          source.push(ArrowUpMinor)
-          const display=this.state.display;
-          display.push(disval);
-          const category2=this.state.category;
-          category2.push(cat);
-          const src=this.state.src;
-          src.push(1);
-          const range=this.state.range;
-          range.push(0);
-          this.setState({
-              display: display,
-              dbdata: dbdata,
-              source:source,
-              src:src,
-              category:category2,
-              range:range
-          });
-       }
+        if(this.state.stat==="generate"){
+    
+            const dbdata2=this.state.dbdata;
+            const flag=dbdata2.some(val => val === dbval);
+            console.log(flag);
+
+            
+            if(!flag){
+              const dbdata=this.state.dbdata;
+              dbdata.push(dbval);
+              const source=this.state.source;
+              source.push(ArrowUpMinor)
+              const display=this.state.display;
+              display.push(disval);
+              const category2=this.state.category;
+              category2.push(cat);
+              const src=this.state.src;
+              src.push(1);
+              const range=this.state.range;
+              range.push(0);
+              this.setState({
+                  display: display,
+                  dbdata: dbdata,
+                  source:source,
+                  src:src,
+                  category:category2,
+                  range:range
+              });
+          }
+      }
       
      
     };
@@ -102,7 +105,7 @@ class DashBoard extends React.Component{
       if(this.state.category[0]==="demographics"){
           cat="dindex"
       }
-        axios.get('http://vav.research.cs.dal.ca/municipalitybackend/rest/'+cat+'/',{params:res})
+        axios.get('http://localhost:5000/rest/'+cat+'/',{params:res})
         .then(result => {
           console.log(result.data['resu2']);
           console.log(result.data);
@@ -131,11 +134,12 @@ class DashBoard extends React.Component{
        });
     }
 
-    setStatus = (value) => {
-       console.log(value);
+    setStat = (value) => {
+      const stat=value;
+      console.log(stat);
        this.setState({
-          status:value
-       })
+          stat:stat
+       });
     }
 
   render(){
@@ -151,7 +155,7 @@ class DashBoard extends React.Component{
         <TextStyle variation="subdued">Choose Indicators</TextStyle>
         
         
-        {/* <Setting onChange={(val)=>this.setStatus(val)}/> */}
+        <Setting onClick={(value)=>this.setStat(value)}/>
       </Card.Section>
       <Card.Section title="Items">
       <Scrollable shadow style={{height: '60vh'}}>
