@@ -8,19 +8,24 @@ import 'leaflet/dist/leaflet.css';
 import Interpreter from './Interpreter.js';
 import {ArrowUpMinor} from '@shopify/polaris-icons';
 import axios from 'axios'
-
+import Setting from './Setting.js'
 class DashBoard extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-
+             idisplay: [],
+             idbdata: [],
+             icategory: [],
              display: [],
              dbdata: [],
              source: [],
              category: [],
              src:[],
              range:[],
-             gendic:[]
+             gendic:[],
+             gresult:{},
+             gdata:[],
+             status:"Generate"
         }
     }
 
@@ -34,6 +39,7 @@ class DashBoard extends React.Component{
     // }
     
     storeDisplay = (disval,dbval,cat) => {
+    
         const dbdata2=this.state.dbdata;
         const flag=dbdata2.some(val => val === dbval);
         console.log(flag);
@@ -61,6 +67,8 @@ class DashBoard extends React.Component{
               range:range
           });
        }
+      
+     
     };
     clearArray = () =>{
        console.log(this.state.src);
@@ -71,7 +79,9 @@ class DashBoard extends React.Component{
        const category=[];
        const src=[];
        const range=[];
-       this.setState({display:display,dbdata:dbdata,source:source,category:category,src:src,range:range});
+       const gresult={};
+       const gdata=[];
+       this.setState({display:display,dbdata:dbdata,source:source,category:category,src:src,range:range,gresult:gresult,gdata:gdata});
     };
 
     generateArray = () => {
@@ -95,6 +105,15 @@ class DashBoard extends React.Component{
         axios.get('http://localhost:5000/rest/'+cat+'/',{params:res})
         .then(result => {
           console.log(result.data['resu2']);
+          console.log(result.data);
+          console.log(result.data['valX']);
+          this.setState(
+
+            {
+               gresult:result.data['resu2'],
+               gdata:result.data['sums'],
+            }
+          )
         })
 
     };
@@ -112,7 +131,15 @@ class DashBoard extends React.Component{
        });
     }
 
+    setStatus = (value) => {
+       console.log(value);
+       this.setState({
+          status:value
+       })
+    }
+
   render(){
+   
    return(
   <AppProvider>
   
@@ -122,6 +149,9 @@ class DashBoard extends React.Component{
     <Card title="Indicators" actions={[{content: 'Manage'}]}>
       <Card.Section>
         <TextStyle variation="subdued">Choose Indicators</TextStyle>
+        
+        
+        {/* <Setting onChange={(val)=>this.setStatus(val)}/> */}
       </Card.Section>
       <Card.Section title="Items">
       <Scrollable shadow style={{height: '60vh'}}>
@@ -139,7 +169,7 @@ class DashBoard extends React.Component{
         </Stack>
       </Card.Section>
       <Card.Section>
-          <Loader data={this.state.display} src={this.state.source} cat={this.state.category} source={this.state.src} range={this.state.range} onSourceChange={(src)=>this.mutateSource(src)} onRangeChange={(range)=> this.mutateRange(range)}/>
+         <Loader data={this.state.display} src={this.state.source} cat={this.state.category} source={this.state.src} range={this.state.range} onSourceChange={(src)=>this.mutateSource(src)} onRangeChange={(range)=> this.mutateRange(range)}/>
        
       </Card.Section>
     </Card>
@@ -148,14 +178,14 @@ class DashBoard extends React.Component{
         <Button primary>Interpret</Button>
       </Card.Section>
       <Card.Section>
-          <Interpreter/>
+          <Interpreter data={this.state.idisplay} cat={this.state.icategory} />
        
       </Card.Section>
     </Card>
   </Layout.Section>
 
       
-  <Maps/>
+  <Maps genres={this.state.gresult} gendata={this.state.gdata}/>
      
 </Layout>
 </AppProvider>
