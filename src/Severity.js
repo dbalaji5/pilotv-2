@@ -43,7 +43,7 @@ class Severity extends React.Component{
         if(this.props.cat==="crime"){
             console.log("in");
 
-            axios.get('http://localhost:5000/rest/severity/',{params:{param2:trans}})
+            axios.get('http://vav.research.cs.dal.ca/municipalitybackend/rest/severity/',{params:{param2:trans}})
                 .then(result => {
                 console.log(result.data['min']);
                 const min=result.data['min'];
