@@ -5,6 +5,7 @@ import diss from '../data/Dissemination.json';
 import '@shopify/polaris/styles.css';
 import {Card,Layout,Spinner} from '@shopify/polaris';
 import Plot from 'react-plotly.js';
+import axios from 'axios';
 
 
 let numMapClicks = 0
@@ -32,15 +33,20 @@ let geoMapClicks2=0
           gLoading:false,
           iLoading:false,
           genres:{},
+          intres:{},
           gendata:[],
+          intdata:[],
           genX:[],
-          genY:[]
+          genY:[],
+          intX:[],
+          intY:[],
+          ajaxload:false
         };
       }
       componentDidUpdate(oldProps,oldState){
     
         
-        if(this.props.genres !== oldState.genres && this.props.gendata!==oldState.gendata){
+        if((this.props.genres !== oldState.genres && this.props.gendata!==oldState.gendata) || (this.props.intres !== oldState.intres && this.props.intdata!==oldState.intdata)  || (this.props.ajaxload!== oldState.ajaxload)){
           console.log(this.props.gendata);
         
             this.setState({
@@ -48,10 +54,20 @@ let geoMapClicks2=0
                 gendata:this.props.gendata,
                 gkey:geoMapClicks,
                 ikey:geoMapClicks2,
+                intres:this.props.intres,
+                intdata:this.props.intdata,
                 weight:1,
+                ajaxload:this.props.ajaxload
             });
           
         }
+        // if(this.props.intres !== oldState.intres && this.props.intdata!==oldState.intdata){
+        //    console.log(this.props.intres);
+        //    this.setState({
+        //      intres:this.props.intres,
+        //      intdata:this.props.intdata
+        //    })
+        // }
     }
 
      getColor = (val) => {
@@ -72,6 +88,59 @@ let geoMapClicks2=0
                                    '#000000';
 
     };
+
+    onEachFeature2 = (feature,layer) => {
+
+      console.log(feature.properties["DAUID"]);
+      //layer.setStyle({fillColor : this.state.color2 ,color:this.state.color2,opacity:this.state.opacity,fillOpacity:0.4,weight:0.4})
+      if(this.state.gendata.length===0){
+        this.setState({
+            iLoading:false
+        })
+        }
+        else{
+            this.setState({
+                iLoading:true
+            })
+        }
+      layer.on('click',(e)=>{
+        console.log(e);
+        if(this.state.iLoading){
+        var data={}
+        data['DAUID']=feature.properties.DAUID;
+        this.setState({
+          iLoading:true
+        })
+        axios.get('http://localhost:5000/rest/explainer/',{params:data})
+        .then(result => {
+
+          console.log(result);
+          var rX=[]
+          var rY=[]
+          var rdata=result.data['exp'];
+          for(var i=0;i<rdata.length;i++){
+              rY.push(rdata[i][1])
+              rX.push(rdata[i][0])
+          }
+     
+          this.setState(
+
+            {
+               intX:rX,
+               intY:rY,
+               iLoading:false
+            }
+          )
+        });
+      }
+        this.setState({
+           ipopup:true,
+           iposition:e.latlng,
+           key:numMapClicks++,
+           ititle:feature.properties.DAUID
+        });
+    });
+  }
    
 
      onEachFeature = (feature,layer) => {
@@ -125,13 +194,13 @@ let geoMapClicks2=0
           gLoading:true
       })
   }
-  if(this.state.gLoading){
-      layer.setStyle({fillColor : this.getColor(this.state.genres[checkDauId]) ,color:this.getColor(this.state.genres[checkDauId]),opacity:1,fillOpacity:0.3,weight:1})
-  }
+  // if(this.state.gLoading){
+  //     layer.setStyle({fillColor : this.getColor(this.state.genres[checkDauId]) ,color:this.getColor(this.state.genres[checkDauId]),opacity:1,fillOpacity:0.3,weight:1})
+  // }
   }
     render(){
 
-        console.log(diss);
+        
 
         var style = (feature) => {
             var checkDauId=feature.properties.DAUID;
@@ -144,42 +213,49 @@ let geoMapClicks2=0
                     weight:1
                 });
             }
-            else{
-            return ({
+          //   else{
+          //   return ({
                 
-                weight: this.state.weight,
-                opacity: this.state.opacity
-              }
-            );
-          }
+          //       weight: this.state.weight,
+          //       opacity: this.state.opacity
+          //     }
+          //   );
+          // }
     
         }
        
       var style2 = (feature) => {
-          return {
-              weight: this.state.weight,
-              opacity: this.state.opacity
-  
-          };
-  
-      }
-      const onEachFeature2 = (feature,layer) => {
-
-          console.log(feature.properties["DAUID"]);
-          layer.setStyle({fillColor : this.state.color2 ,color:this.state.color2,opacity:this.state.opacity,fillOpacity:0.4,weight:0.4})
-          layer.on('click',(e)=>{
-            console.log(e);
-            this.setState({
-               ipopup:true,
-               iposition:e.latlng,
-               key:numMapClicks++,
-               ititle:feature.properties.DAUID
+        var checkDauId=feature.properties.DAUID;
+        if(this.state.intdata.length>0){
+            return ({
+                fillColor: this.getColor(this.state.intres[checkDauId]),
+                color:this.getColor(this.state.intres[checkDauId]),
+                opacity:1,
+                fillOpacity:0.3,
+                weight:1
             });
-        })
+        }
+  
       }
+      // const onEachFeature2 = (feature,layer) => {
+
+      //     console.log(feature.properties["DAUID"]);
+      //     layer.setStyle({fillColor : this.state.color2 ,color:this.state.color2,opacity:this.state.opacity,fillOpacity:0.4,weight:0.4})
+      //     layer.on('click',(e)=>{
+            
+      //       this.setState({
+      //          ipopup:true,
+      //          iposition:e.latlng,
+      //          key:numMapClicks++,
+      //          ititle:feature.properties.DAUID
+      //       });
+      //   })
+      // }
         return (
+          
           <Layout.Section oneHalf>
           <Card title="Visualization">
+          {(this.state.ajaxload==false)?(
             <Map center={[44.755113, -63.320488]} zoom={9} style={{ height: "60vh" }}>
                 <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -190,7 +266,7 @@ let geoMapClicks2=0
               
               <LayersControl.BaseLayer name="Index" checked="true">
               <GeoJSON 
-                key={this.state.gkey}
+                // key={this.state.gkey}
                 ref="geojson2"
                 data={diss}
                 style={style}
@@ -226,15 +302,15 @@ let geoMapClicks2=0
                 ref="geojson"
                 data={diss}
                 style={style2}
-                onEachFeature={onEachFeature2.bind(this)}
+                onEachFeature={(feature,layer)=>this.onEachFeature2(feature,layer)}
               />
               {this.state.ipopup && <Popup key={this.state.key} position={this.state.iposition} onClose={()=>{this.setState({ipopup:false})}}>
               <div style={{width:320+'px',height:240+'px'}}>
               {(this.state.iLoading)?(<Plot
                     data={[
                       {type: 'bar',
-                              x: ['A','B','C'],
-                              y: [12,23,34],
+                              x: this.state.intX,
+                              y: this.state.intY,
                               marker: {
                                   color: '#C8A2C8',
                                   line: {
@@ -252,8 +328,8 @@ let geoMapClicks2=0
               </LayersControl>
               
 
-            </Map>
-            {/* <Spinner accessibilityLabel="Spinner example" size="large" color="teal" /> */}
+            </Map>):
+           <Spinner accessibilityLabel="Spinner example" size="large" color="teal" />}
 
       </Card>
       <Card title="demo">

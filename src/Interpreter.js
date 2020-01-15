@@ -1,27 +1,27 @@
 import React from 'react';
-import Stack from '@shopify/polaris';
+import {Stack} from '@shopify/polaris';
 class Interpreter extends React.Component{
 
     constructor(props){
         super(props);
         this.state = {
             data:[],
-            category:[],
+            category:[]
         }
     }
 
     componentDidUpdate(oldProps,oldState){
     
         
-        if(this.props.data !== oldState.data && this.props.cat!==oldState.cat){
+        if(this.props.data !== oldState.data && this.props.cat!==oldState.category){
 
-    
+            console.log(this.props.data,this.props.cat);
             this.setState({
                 data:this.props.data,
-                category:this.props.cat,
+                category:this.props.cat
             });
 
-            console.log(this.state.data[0]);
+            console.log(this.state.data);
 
         }
     }
@@ -32,13 +32,12 @@ class Interpreter extends React.Component{
                 <h1>Waiting for the contents</h1>
             );
         }
+        console.log(this.state.data);
         return(
             <div> 
-            {this.state.data.map(item => {
-                <Stack>
-                <p key={item}>{item}</p>
-                </Stack>
-            })}
+                    <Stack vertical={true}>
+                    {this.state.data.map(it => <p key={it}>{it}</p>)}
+                    </Stack>
             </div>
         );
     }
