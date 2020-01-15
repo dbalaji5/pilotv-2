@@ -24,8 +24,11 @@ class DashBoard extends React.Component{
              range:[],
              gendic:[],
              gresult:{},
+             iresult:{},
              gdata:[],
-             stat:"generate"
+             idata:[],
+             stat:"generate",
+             ajaxLoading:false
         }
     }
 
@@ -70,6 +73,26 @@ class DashBoard extends React.Component{
               });
           }
       }
+      else{
+          
+          const idbdata=this.state.idbdata;
+          const flag2=idbdata.some(val => val === dbval);
+          if(!flag2){
+              const idbdata=this.state.idbdata;
+              idbdata.push(dbval);
+              const idisplay=this.state.idisplay;
+              idisplay.push(disval);
+              const icategory=this.state.icategory;
+              icategory.push(cat);
+              this.setState({
+                 idbdata:idbdata,
+                 idisplay:idisplay,
+                 icategory:icategory
+              });
+          }
+          console.log(this.state.idisplay,this.state.icategory);
+
+      }
       
      
     };
@@ -88,11 +111,7 @@ class DashBoard extends React.Component{
     };
 
     generateArray = () => {
-      console.log(this.state.display);
-      console.log(this.state.dbdata);
-      console.log(this.state.src);
-      console.log(this.state.range);
-      console.log(this.state.category);
+   
       var res={};
       for(var i=0;i<this.state.dbdata.length;i++){
           res[this.state.dbdata[i]]=(this.state.range[i])*(this.state.src[i]);
@@ -105,18 +124,49 @@ class DashBoard extends React.Component{
       if(this.state.category[0]==="demographics"){
           cat="dindex"
       }
+      this.setState({
+          ajaxLoading:true
+      })
         axios.get('http://localhost:5000/rest/'+cat+'/',{params:res})
         .then(result => {
-          console.log(result.data['resu2']);
-          console.log(result.data);
-          console.log(result.data['valX']);
+     
           this.setState(
 
             {
+               ajaxLoading:false,
                gresult:result.data['resu2'],
                gdata:result.data['sums'],
             }
           )
+        })
+
+    };
+
+    interpretArray = () => {
+      var result={};
+      for(var j=0;j<this.state.idbdata.length;j++){
+
+          result[this.state.idbdata[j]]=1;
+
+      }
+      var cat1="interpreter3";
+      if(this.state.icategory[0]==="incident"){
+          cat1="interpreter2"
+      }
+      if(this.state.icategory[0]==="demographics"){
+          cat1="interpreter1"
+      }
+      this.setState({
+        ajaxLoading:true
+      })
+      axios.get('http://localhost:5000/rest/'+cat1+'/',{params:result})
+        .then(result => {
+          this.setState({
+              ajaxLoading:false,
+              iresult:result.data['pred'],
+              idata:result.data['sums']
+          });
+
         })
 
     };
@@ -136,7 +186,7 @@ class DashBoard extends React.Component{
 
     setStat = (value) => {
       const stat=value;
-      console.log(stat);
+     
        this.setState({
           stat:stat
        });
@@ -179,7 +229,7 @@ class DashBoard extends React.Component{
     </Card>
     <Card title="Interpreters">
       <Card.Section>
-        <Button primary>Interpret</Button>
+        <Button primary onClick={this.interpretArray}>Interpret</Button>
       </Card.Section>
       <Card.Section>
           <Interpreter data={this.state.idisplay} cat={this.state.icategory} />
@@ -189,7 +239,7 @@ class DashBoard extends React.Component{
   </Layout.Section>
 
       
-  <Maps genres={this.state.gresult} gendata={this.state.gdata}/>
+  <Maps genres={this.state.gresult} gendata={this.state.gdata} ajaxload={this.state.ajaxLoading} intres={this.state.iresult} intdata={this.state.idata}/>
      
 </Layout>
 </AppProvider>
