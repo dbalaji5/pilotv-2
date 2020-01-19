@@ -17,7 +17,7 @@ class MapsComp extends React.Component{
     componentDidUpdate(oldProps,oldState){
     
         
-        if(this.props.data !== oldState.data && this.props.loading !== oldState.loading){
+        if(this.props.data !== oldState.data || this.props.loading !== oldState.loading){
           console.log(this.props.data);
         
             this.setState({

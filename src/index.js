@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Comparator from './Comparator.js'
+import DashBoard from './DashBoard.js'
 ReactDOM.render(
-  <Comparator/>,
+  <DashBoard/>,
   document.getElementById('root')
 );
 // const Plot = createPlotlyComponent(Plotly);

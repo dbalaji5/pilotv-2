@@ -109,13 +109,14 @@ class DashBoard extends React.Component{
        const gdata=[];
        this.setState({display:display,dbdata:dbdata,source:source,category:category,src:src,range:range,gresult:gresult,gdata:gdata});
     };
+
     clearArray2 = () => {
 
-          const idbdata=[];
-          const idisplay=[];
-          const icategory=[];
-          this.setState({idbdata:idbdata,idisplay:idisplay,icategory:icategory});
-    };
+        const idbdata=[];
+        const idisplay=[];
+        const icategory=[];
+        this.setState({idbdata:idbdata,idisplay:idisplay,icategory:icategory})
+    }
 
     generateArray = () => {
    
@@ -136,7 +137,7 @@ class DashBoard extends React.Component{
       })
         axios.get('http://localhost:5000/rest/'+cat+'/',{params:res})
         .then(result => {
-     
+          console.log(result.data['resu2']);
           this.setState(
 
             {
@@ -168,7 +169,9 @@ class DashBoard extends React.Component{
       })
       axios.get('http://localhost:5000/rest/'+cat1+'/',{params:result})
         .then(result => {
+          console.log(result.data['sums']);
           this.setState({
+
               ajaxLoading:false,
               iresult:result.data['pred'],
               idata:result.data['sums']
@@ -226,7 +229,7 @@ class DashBoard extends React.Component{
       <Card.Section>
         <Stack spacing="loose">
         <Button primary onClick={this.generateArray}>Generate</Button>
-        <Button secondary onClick={this.clearArray}>Clear</Button>
+        <Button primary onClick={this.clearArray}>Clear</Button>
         </Stack>
       </Card.Section>
       <Card.Section>
@@ -238,7 +241,7 @@ class DashBoard extends React.Component{
       <Card.Section>
         <Stack spacing="loose">
         <Button primary onClick={this.interpretArray}>Interpret</Button>
-        <Button secondary onClick={this.clearArray2}>Clear</Button>
+        <Button primary onClick={this.clearArray2}>clear</Button>
         </Stack>
       </Card.Section>
       <Card.Section>
