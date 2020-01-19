@@ -72,7 +72,6 @@ let geoMapClicks2=0
 
      getColor = (val) => {
 
-      console.log(val);
 
       return val>=-1 && val < -0.75? '#67001f':
              val>=-0.75 && val < -0.6 ? '#b2182b':
@@ -104,13 +103,13 @@ let geoMapClicks2=0
             })
         }
       layer.on('click',(e)=>{
-        console.log(e);
+        console.log("******************");
         if(this.state.iLoading){
         var data={}
         data['DAUID']=feature.properties.DAUID;
-        this.setState({
-          iLoading:true
-        })
+        // this.setState({
+        //   iLoading:true
+        // })
         axios.get('http://localhost:5000/rest/explainer/',{params:data})
         .then(result => {
 
@@ -127,8 +126,8 @@ let geoMapClicks2=0
 
             {
                intX:rX,
-               intY:rY,
-               iLoading:false
+               intY:rY
+              //  iLoading:false
             }
           )
         });

@@ -109,6 +109,13 @@ class DashBoard extends React.Component{
        const gdata=[];
        this.setState({display:display,dbdata:dbdata,source:source,category:category,src:src,range:range,gresult:gresult,gdata:gdata});
     };
+    clearArray2 = () => {
+
+          const idbdata=[];
+          const idisplay=[];
+          const icategory=[];
+          this.setState({idbdata:idbdata,idisplay:idisplay,icategory:icategory});
+    };
 
     generateArray = () => {
    
@@ -219,7 +226,7 @@ class DashBoard extends React.Component{
       <Card.Section>
         <Stack spacing="loose">
         <Button primary onClick={this.generateArray}>Generate</Button>
-        <Button primary onClick={this.clearArray}>Clear</Button>
+        <Button secondary onClick={this.clearArray}>Clear</Button>
         </Stack>
       </Card.Section>
       <Card.Section>
@@ -229,7 +236,10 @@ class DashBoard extends React.Component{
     </Card>
     <Card title="Interpreters">
       <Card.Section>
+        <Stack spacing="loose">
         <Button primary onClick={this.interpretArray}>Interpret</Button>
+        <Button secondary onClick={this.clearArray2}>Clear</Button>
+        </Stack>
       </Card.Section>
       <Card.Section>
           <Interpreter data={this.state.idisplay} cat={this.state.icategory} />
