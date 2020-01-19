@@ -6,6 +6,7 @@ import '@shopify/polaris/styles.css';
 import {Card,Layout,Spinner} from '@shopify/polaris';
 import Plot from 'react-plotly.js';
 import axios from 'axios';
+import BarChart from './BarChart.js';
 
 
 let numMapClicks = 0
@@ -40,7 +41,8 @@ let geoMapClicks2=0
           genY:[],
           intX:[],
           intY:[],
-          ajaxload:false
+          ajaxload:false,
+          cmpload:false
         };
       }
       componentDidUpdate(oldProps,oldState){
@@ -89,10 +91,8 @@ let geoMapClicks2=0
     };
 
     onEachFeature2 = (feature,layer) => {
-
-      console.log(feature.properties["DAUID"]);
       //layer.setStyle({fillColor : this.state.color2 ,color:this.state.color2,opacity:this.state.opacity,fillOpacity:0.4,weight:0.4})
-      if(this.state.gendata.length===0){
+      if(this.state.intdata.length===0){
         this.setState({
             iLoading:false
         })
@@ -103,13 +103,13 @@ let geoMapClicks2=0
             })
         }
       layer.on('click',(e)=>{
-        console.log("******************");
+        console.log(e);
         if(this.state.iLoading){
         var data={}
         data['DAUID']=feature.properties.DAUID;
-        // this.setState({
-        //   iLoading:true
-        // })
+        this.setState({
+           cmpload:true
+        })
         axios.get('http://localhost:5000/rest/explainer/',{params:data})
         .then(result => {
 
@@ -126,8 +126,9 @@ let geoMapClicks2=0
 
             {
                intX:rX,
-               intY:rY
-              //  iLoading:false
+               //support@refer.telus.com dexter hugo 
+               intY:rY,
+               cmpload:true
             }
           )
         });
@@ -305,7 +306,7 @@ let geoMapClicks2=0
               />
               {this.state.ipopup && <Popup key={this.state.key} position={this.state.iposition} onClose={()=>{this.setState({ipopup:false})}}>
               <div style={{width:320+'px',height:240+'px'}}>
-              {(this.state.iLoading)?(<Plot
+              {(this.state.iLoading && this.state.cmpload)?(<Plot
                     data={[
                       {type: 'bar',
                               x: this.state.intX,
@@ -334,6 +335,7 @@ let geoMapClicks2=0
       <Card title="demo">
         <div id="te">
 
+                 {(this.state.gLoading)?(<BarChart data={this.state.gendata}/>):<p>Waiting for Contents</p>}
         </div>
       </Card>
     </Layout.Section>
