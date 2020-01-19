@@ -22,7 +22,8 @@ class Comparator extends React.Component{
             valB:"",
             pieLoading1:false,
             pieLoading2:false,
-            compres:{}
+            compres:{},
+            loading:false
         }
 
     }
@@ -83,6 +84,9 @@ class Comparator extends React.Component{
             var tempArr=[];
             tempArr.push(this.state.valA);
             tempArr.push(this.state.valB);
+            this.setState({
+                loading:true
+            })
 
             var param={};
             param['index']=tempArr;
@@ -91,7 +95,8 @@ class Comparator extends React.Component{
             .then(result => {
                  console.log(result.data.result);
                  this.setState({
-                     compres:result.data.result
+                     compres:result.data.result,
+                     loading:false
                  })
               })
         }
@@ -204,7 +209,7 @@ class Comparator extends React.Component{
 
                         <Layout.Section oneHalf>
                             <Card title="Maps">
-                                <MapsComp data={this.state.compres}/>
+                                <MapsComp data={this.state.compres} loading={this.state.loading}/>
                             </Card>
                         </Layout.Section>
 
