@@ -1,5 +1,6 @@
 import React from 'react';
 import { Map, TileLayer,LayersControl,GeoJSON } from "react-leaflet";
+import {Spinner} from '@shopify/polaris';
 import "leaflet/dist/leaflet.css";
 import diss from '../data/Dissemination.json';
 import '@shopify/polaris/styles.css';
@@ -9,17 +10,19 @@ class MapsComp extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            data:[]
+            data:[],
+            loading:false
         }
     }
     componentDidUpdate(oldProps,oldState){
     
         
-        if(this.props.data !== oldState.data){
+        if(this.props.data !== oldState.data && this.props.loading !== oldState.loading){
           console.log(this.props.data);
         
             this.setState({
                 data:this.props.data,
+                loading:this.props.loading
             });
           
         }
@@ -61,8 +64,9 @@ class MapsComp extends React.Component{
         }
 
         return (
-
-          <Map center={[44.755113, -63.320488]} zoom={9} style={{ height: "80vh" }}>
+          <React.Fragment>
+          {(this.state.loading===false)?(
+          <Map center={[44.755113, -63.320488]} zoom={9} style={{ height: "95vh" }}>
             <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
@@ -81,6 +85,8 @@ class MapsComp extends React.Component{
             
           </LayersControl>
           </Map>
+          ):(<Spinner accessibilityLabel="Spinner example" size="large" color="teal" />)}
+          </React.Fragment>
         );
     }
 
