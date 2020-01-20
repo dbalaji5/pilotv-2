@@ -1,6 +1,6 @@
 import React from 'react';
 import '@shopify/polaris/styles.css';
-import { AppProvider, Layout, Card, Scrollable } from '@shopify/polaris';
+import { AppProvider, Layout, Card, Scrollable,Page } from '@shopify/polaris';
 import Plot from 'react-plotly.js';
 import './Comparator.css'
 import axios from 'axios';
@@ -143,6 +143,7 @@ class Comparator extends React.Component{
         return(
 
                 <AppProvider>
+                    <Page fullWidth={true} separator>
                     <Layout>
                         <Layout.Section oneThird primary> 
                                 <Card title="Index1">
@@ -214,6 +215,7 @@ class Comparator extends React.Component{
                         </Layout.Section>
 
                     </Layout>
+                    </Page>
 
                 </AppProvider>
 

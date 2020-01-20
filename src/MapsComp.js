@@ -66,7 +66,7 @@ class MapsComp extends React.Component{
         return (
           <React.Fragment>
           {(this.state.loading===false)?(
-          <Map center={[44.755113, -63.320488]} zoom={9} style={{ height: "95vh" }}>
+          <Map center={[44.755113, -63.320488]} zoom={9} style={{ height: "90vh" }}>
             <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"

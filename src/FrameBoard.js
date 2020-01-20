@@ -1,6 +1,6 @@
 import React, {useCallback, useRef, useState} from 'react';
-import {ActionList, AppProvider, Avatar, Card, ContextualSaveBar, FormLayout, Frame, Layout, Loading, Modal, Navigation, Page, SkeletonBodyText, SkeletonDisplayText, SkeletonPage, TextContainer, TextField, Toast, TopBar} from '@shopify/polaris';
-import {ArrowLeftMinor, ConversationMinor, HomeMajorMonotone, OrdersMajorTwotone} from '@shopify/polaris-icons';
+import {AppProvider,  Frame, Navigation, Toast, TopBar} from '@shopify/polaris';
+import {HomeMajorMonotone, DataVisualizationMajorMonotone} from '@shopify/polaris-icons';
 import '@shopify/polaris/styles.css';
 import Comparator from './Comparator.js'
 import DashBoard from './DashBoard.js';
@@ -100,13 +100,13 @@ export default function FrameBoard() {
         title="HRM"
         items={[
           {
-            label: 'Dashboard',
+            label: 'Index',
             icon: HomeMajorMonotone,
             onClick: toggleIsLoading,
           },
           {
             label: 'Index Compare',
-            icon: OrdersMajorTwotone,
+            icon: DataVisualizationMajorMonotone,
             onClick: toggleIsLoading2,
           },
         ]}

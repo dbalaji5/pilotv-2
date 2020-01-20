@@ -256,7 +256,7 @@ let geoMapClicks2=0
           <Layout.Section oneHalf>
           <Card title="Visualization">
           {(this.state.ajaxload==false)?(
-            <Map center={[44.755113, -63.320488]} zoom={9} style={{ height: "60vh" }}>
+            <Map center={[44.755113, -63.320488]} zoom={9} style={{ height: "50vh" }} >
                 <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="http://{s}.tiles.wmflabs.org/bw-mapnik/{z}/{x}/{y}.png"
@@ -332,12 +332,12 @@ let geoMapClicks2=0
            <Spinner accessibilityLabel="Spinner example" size="large" color="teal" />}
 
       </Card>
-      <Card title="demo">
+      {/* <Card title="demo">
         <div id="te">
 
                  {(this.state.gLoading)?(<BarChart data={this.state.gendata}/>):<p>Waiting for Contents</p>}
         </div>
-      </Card>
+      </Card> */}
     </Layout.Section>
   );
     
