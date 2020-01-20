@@ -1,6 +1,6 @@
 import React from 'react';
 import '@shopify/polaris/styles.css';
-import {AppProvider,Card,Layout,Button,Stack,Scrollable, TextStyle} from '@shopify/polaris';
+import {AppProvider,Card,Layout,Button,Stack,Scrollable, TextStyle, Page} from '@shopify/polaris';
 import Maps from './Maps.js'
 import App from './App.js'
 import Loader from './Loader.js'
@@ -206,9 +206,9 @@ class DashBoard extends React.Component{
    
    return(
   <AppProvider>
-  
+  <Page fullWidth={true} separator>
   <Layout>
-  <Layout.Section oneThird>
+  <Layout.Section secondary>
     
     <Card title="Indicators" actions={[{content: 'Manage'}]}>
       <Card.Section>
@@ -218,13 +218,19 @@ class DashBoard extends React.Component{
         <Setting onClick={(value)=>this.setStat(value)}/>
       </Card.Section>
       <Card.Section title="Items">
-      <Scrollable shadow style={{height: '60vh'}}>
+      <Scrollable shadow style={{height: '40vh'}}>
           <App onValueChange={(disval,dbval,cat)=>this.storeDisplay(disval,dbval,cat)}/>
        </Scrollable>
       </Card.Section>
     </Card>
   </Layout.Section>
-  <Layout.Section oneThird secondary>
+  <Layout.Section primary>
+  <Maps genres={this.state.gresult} gendata={this.state.gdata} ajaxload={this.state.ajaxLoading} intres={this.state.iresult} intdata={this.state.idata}/>
+
+  </Layout.Section>
+  </Layout>
+  <Layout>
+  <Layout.Section oneThird>
     <Card title="Selector">
       <Card.Section>
         <Stack spacing="loose">
@@ -233,10 +239,13 @@ class DashBoard extends React.Component{
         </Stack>
       </Card.Section>
       <Card.Section>
+       <Scrollable shadow style={{height: '20vh'}}>
          <Loader data={this.state.display} src={this.state.source} cat={this.state.category} source={this.state.src} range={this.state.range} onSourceChange={(src)=>this.mutateSource(src)} onRangeChange={(range)=> this.mutateRange(range)}/>
-       
+       </Scrollable>
       </Card.Section>
     </Card>
+  </Layout.Section>
+  <Layout.Section oneThird>
     <Card title="Interpreters">
       <Card.Section>
         <Stack spacing="loose">
@@ -245,16 +254,23 @@ class DashBoard extends React.Component{
         </Stack>
       </Card.Section>
       <Card.Section>
+      <Scrollable shadow style={{height: '20vh'}}>
           <Interpreter data={this.state.idisplay} cat={this.state.icategory} />
-       
+       </Scrollable>
       </Card.Section>
     </Card>
   </Layout.Section>
-
-      
-  <Maps genres={this.state.gresult} gendata={this.state.gdata} ajaxload={this.state.ajaxLoading} intres={this.state.iresult} intdata={this.state.idata}/>
+  <Layout.Section oneThird>
+      <Card title="Chart">
+      <Scrollable shadow style={{height: '20vh'}}>
+        <p>          Chart Feature under Construction</p>
+      </Scrollable>
+      </Card>
+  </Layout.Section>
+  {/* <Maps genres={this.state.gresult} gendata={this.state.gdata} ajaxload={this.state.ajaxLoading} intres={this.state.iresult} intdata={this.state.idata}/> */}
      
 </Layout>
+</Page>
 </AppProvider>
    );
   }
