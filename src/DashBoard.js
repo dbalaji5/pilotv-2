@@ -228,9 +228,8 @@ class DashBoard extends React.Component{
   <Maps genres={this.state.gresult} gendata={this.state.gdata} ajaxload={this.state.ajaxLoading} intres={this.state.iresult} intdata={this.state.idata}/>
 
   </Layout.Section>
-  </Layout>
-  <Layout>
-  <Layout.Section oneThird>
+  <Layout.Section>
+    <Stack>
     <Card title="Selector">
       <Card.Section>
         <Stack spacing="loose">
@@ -239,13 +238,11 @@ class DashBoard extends React.Component{
         </Stack>
       </Card.Section>
       <Card.Section>
-       <Scrollable shadow style={{height: '20vh'}}>
+       <Scrollable shadow style={{height: '20vh',width:'45vh'}}>
          <Loader data={this.state.display} src={this.state.source} cat={this.state.category} source={this.state.src} range={this.state.range} onSourceChange={(src)=>this.mutateSource(src)} onRangeChange={(range)=> this.mutateRange(range)}/>
        </Scrollable>
       </Card.Section>
     </Card>
-  </Layout.Section>
-  <Layout.Section oneThird>
     <Card title="Interpreters">
       <Card.Section>
         <Stack spacing="loose">
@@ -254,18 +251,17 @@ class DashBoard extends React.Component{
         </Stack>
       </Card.Section>
       <Card.Section>
-      <Scrollable shadow style={{height: '20vh'}}>
+      <Scrollable shadow style={{height: '20vh',width:'45vh'}}>
           <Interpreter data={this.state.idisplay} cat={this.state.icategory} />
        </Scrollable>
       </Card.Section>
     </Card>
-  </Layout.Section>
-  <Layout.Section oneThird>
       <Card title="Chart">
-      <Scrollable shadow style={{height: '20vh'}}>
+      <Scrollable shadow style={{height: '32vh',width:'59vh'}}>
         <p>          Chart Feature under Construction</p>
       </Scrollable>
       </Card>
+  </Stack>
   </Layout.Section>
   {/* <Maps genres={this.state.gresult} gendata={this.state.gdata} ajaxload={this.state.ajaxLoading} intres={this.state.iresult} intdata={this.state.idata}/> */}
      
