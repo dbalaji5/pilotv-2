@@ -49,7 +49,7 @@ let geoMapClicks2=0
     
         
         if((this.props.genres !== oldState.genres && this.props.gendata!==oldState.gendata) || (this.props.intres !== oldState.intres && this.props.intdata!==oldState.intdata)  || (this.props.ajaxload!== oldState.ajaxload)){
-          console.log(this.props.gendata);
+         
         
             this.setState({
                 genres:this.props.genres,
@@ -103,7 +103,7 @@ let geoMapClicks2=0
             })
         }
       layer.on('click',(e)=>{
-        console.log(e);
+       
         if(this.state.iLoading){
         var data={}
         data['DAUID']=feature.properties.DAUID;
@@ -113,7 +113,7 @@ let geoMapClicks2=0
         axios.get('http://localhost:5000/rest/explainer/',{params:data})
         .then(result => {
 
-          console.log(result);
+          
           var rX=[]
           var rY=[]
           var rdata=result.data['exp'];
@@ -148,7 +148,7 @@ let geoMapClicks2=0
 
       var checkDauId=feature.properties.DAUID;
       layer.on('click',(e)=>{
-          console.log(e);
+          
           this.setState({
              gpopup:true,
              position:e.latlng,

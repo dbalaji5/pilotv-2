@@ -9,6 +9,7 @@ import Interpreter from './Interpreter.js';
 import {ArrowUpMinor} from '@shopify/polaris-icons';
 import axios from 'axios'
 import Setting from './Setting.js'
+import Plot from 'react-plotly.js';
 class DashBoard extends React.Component{
     constructor(props){
         super(props);
@@ -28,7 +29,10 @@ class DashBoard extends React.Component{
              gdata:[],
              idata:[],
              stat:"generate",
-             ajaxLoading:false
+             chartX:[],
+             chartY:[],
+             ajaxLoading:false,
+             ajaxLoading2:true
         }
     }
 
@@ -47,7 +51,7 @@ class DashBoard extends React.Component{
     
             const dbdata2=this.state.dbdata;
             const flag=dbdata2.some(val => val === dbval);
-            console.log(flag);
+            //console.log(flag);
 
             
             if(!flag){
@@ -90,15 +94,14 @@ class DashBoard extends React.Component{
                  icategory:icategory
               });
           }
-          console.log(this.state.idisplay,this.state.icategory);
+          
 
       }
       
      
     };
     clearArray = () =>{
-       console.log(this.state.src);
-       console.log(this.state.range);
+       
        const display=[];
        const dbdata=[];
        const source=[];
@@ -124,7 +127,7 @@ class DashBoard extends React.Component{
       for(var i=0;i<this.state.dbdata.length;i++){
           res[this.state.dbdata[i]]=(this.state.range[i])*(this.state.src[i]);
       }
-      console.log(res);
+      // console.log(res);
       var cat="index";
       if(this.state.category[0]==="incident"){
           cat="incident"
@@ -133,19 +136,28 @@ class DashBoard extends React.Component{
           cat="dindex"
       }
       this.setState({
-          ajaxLoading:true
+          ajaxLoading:true,
+          ajaxLoading2:true
       })
         axios.get('http://localhost:5000/rest/'+cat+'/',{params:res})
         .then(result => {
-          console.log(result.data['resu2']);
+          //console.log(result.data['resu2']);
+          var res=result.data['sums'].sort((a,b) => {
+            return a.Index-b.Index
+          })
           this.setState(
 
             {
                ajaxLoading:false,
+               ajaxLoading2:false,
                gresult:result.data['resu2'],
                gdata:result.data['sums'],
+               chartX:res.map((a)=>a.DAUID),
+               chartY:res.map((b)=>b.Index)
             }
+            
           )
+        
         })
 
     };
@@ -169,12 +181,17 @@ class DashBoard extends React.Component{
       })
       axios.get('http://localhost:5000/rest/'+cat1+'/',{params:result})
         .then(result => {
-          console.log(result.data['sums']);
+
+          var res=result.data['sums'].sort((a,b) => {
+            return a.Index-b.Index
+          })
+          
           this.setState({
 
               ajaxLoading:false,
               iresult:result.data['pred'],
-              idata:result.data['sums']
+              idata:result.data['sums'],
+              chartY:res.map((b)=>b.Index)
           });
 
         })
@@ -258,7 +275,21 @@ class DashBoard extends React.Component{
     </Card>
       <Card title="Chart">
       <Scrollable shadow style={{height: '32vh',width:'59vh'}}>
-        <p>          Chart Feature under Construction</p>
+      {(!this.state.ajaxLoading2)?(<Plot
+                    data={[
+                      {type: 'bar',
+                              // x: this.state.chartX,
+                              y: this.state.chartY,
+                              marker: {
+                                  color: '#C8A2C8',
+                                  line: {
+                                      width: 2.5
+                                        }
+                               }
+                       }
+                    ]}
+                    layout={ {width: '30vh', height: '50vh', title: this.state.ititle} }
+                  />):(<p>Waiting for the load</p>)}
       </Scrollable>
       </Card>
   </Stack>
