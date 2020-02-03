@@ -42,13 +42,14 @@ let geoMapClicks2=0
           intX:[],
           intY:[],
           ajaxload:false,
-          cmpload:false
+          cmpload:false,
+          iweight:{}
         };
       }
       componentDidUpdate(oldProps,oldState){
     
         
-        if((this.props.genres !== oldState.genres && this.props.gendata!==oldState.gendata) || (this.props.intres !== oldState.intres && this.props.intdata!==oldState.intdata)  || (this.props.ajaxload!== oldState.ajaxload)){
+        if((this.props.genres !== oldState.genres && this.props.gendata!==oldState.gendata) || (this.props.intres !== oldState.intres && this.props.intdata!==oldState.intdata)  || (this.props.ajaxload!== oldState.ajaxload) || (this.props.iweight!== oldState.iweight)){
          
         
             this.setState({
@@ -59,7 +60,8 @@ let geoMapClicks2=0
                 intres:this.props.intres,
                 intdata:this.props.intdata,
                 weight:1,
-                ajaxload:this.props.ajaxload
+                ajaxload:this.props.ajaxload,
+                iweight:this.props.iweight
             });
           
         }
@@ -210,7 +212,7 @@ let geoMapClicks2=0
                     color:this.getColor(this.state.genres[checkDauId]),
                     opacity:1,
                     fillOpacity:0.3,
-                    weight:1
+                    weight:this.state.iweight[checkDauId]
                 });
             }
           //   else{
@@ -232,7 +234,7 @@ let geoMapClicks2=0
                 color:this.getColor(this.state.intres[checkDauId]),
                 opacity:1,
                 fillOpacity:0.3,
-                weight:1
+                weight:this.state.iweight[checkDauId]
             });
         }
   
