@@ -2,7 +2,7 @@ import React, {useCallback, useState} from 'react';
 import {RangeSlider} from '@shopify/polaris';
 
 export default function Ranger(props) {
-  const [rangeValue, setRangeValue] = useState(props.max);
+  const [rangeValue, setRangeValue] = useState(props.min);
 
   const handleRangeSliderChange = useCallback(
     (value) => {
@@ -19,7 +19,7 @@ export default function Ranger(props) {
   return (
 
       <RangeSlider
-        min={0}
+        min={props.min}
         max={props.max}
         value={rangeValue}
         onChange={handleRangeSliderChange}

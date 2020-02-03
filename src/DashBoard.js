@@ -10,6 +10,8 @@ import {ArrowUpMinor} from '@shopify/polaris-icons';
 import axios from 'axios'
 import Setting from './Setting.js'
 import Plot from 'react-plotly.js';
+import MethodSetting from './MethodSetting.js';
+import Ranger from './Ranger.js'
 class DashBoard extends React.Component{
     constructor(props){
         super(props);
@@ -32,7 +34,10 @@ class DashBoard extends React.Component{
              chartX:[],
              chartY:[],
              ajaxLoading:false,
-             ajaxLoading2:true
+             ajaxLoading2:true,
+             indexWeight:{},
+             method:'lc',
+             datequery:2005
         }
     }
 
@@ -122,13 +127,19 @@ class DashBoard extends React.Component{
     }
 
     generateArray = () => {
+      
    
       var res={};
       for(var i=0;i<this.state.dbdata.length;i++){
           res[this.state.dbdata[i]]=(this.state.range[i])*(this.state.src[i]);
       }
+      
       // console.log(res);
       var cat="index";
+      if(this.state.category[0]=="crime"){
+        res['d1']=this.state.datequery+'/01/01'
+        res['d2']=this.state.datequery+'/12/31'
+      }
       if(this.state.category[0]==="incident"){
           cat="incident"
       }
@@ -139,12 +150,19 @@ class DashBoard extends React.Component{
           ajaxLoading:true,
           ajaxLoading2:true
       })
+      if(this.state.method==='lc'){
         axios.get('http://localhost:5000/rest/'+cat+'/',{params:res})
         .then(result => {
           //console.log(result.data['resu2']);
           var res=result.data['sums'].sort((a,b) => {
             return a.Index-b.Index
           })
+
+          var indexWeight={}
+          res.map((r)=>{indexWeight[r.DAUID]=1})
+          var sx=res.map((r)=>r.DAUID)
+          console.log(indexWeight,sx);
+
           this.setState(
 
             {
@@ -152,6 +170,7 @@ class DashBoard extends React.Component{
                ajaxLoading2:false,
                gresult:result.data['resu2'],
                gdata:result.data['sums'],
+               indexWeight:indexWeight,
                chartX:res.map((a)=>a.DAUID),
                chartY:res.map((b)=>b.Index)
             }
@@ -159,6 +178,40 @@ class DashBoard extends React.Component{
           )
         
         })
+      }
+      else{
+        console.log("in crimepca method")
+
+        axios.get('http://localhost:5000/rest/crimepca/',{params:res})
+        .then(result => {
+          //console.log(result.data['resu2']);
+          var res=result.data['sums'].sort((a,b) => {
+            return a.Index-b.Index
+          })
+
+          var indexWeight={}
+          res.map((r)=>{indexWeight[r.DAUID]=1})
+          var sx=res.map((r)=>r.DAUID)
+          console.log(indexWeight,sx);
+
+          this.setState(
+
+            {
+               ajaxLoading:false,
+               ajaxLoading2:false,
+               gresult:result.data['resu2'],
+               gdata:result.data['sums'],
+               indexWeight:indexWeight,
+               chartX:res.map((a)=>a.DAUID),
+               chartY:res.map((b)=>b.Index)
+            }
+            
+          )
+        
+        })
+
+
+      }
 
     };
 
@@ -185,12 +238,13 @@ class DashBoard extends React.Component{
           var res=result.data['sums'].sort((a,b) => {
             return a.Index-b.Index
           })
-          
+         
           this.setState({
 
               ajaxLoading:false,
               iresult:result.data['pred'],
               idata:result.data['sums'],
+              chartX:res.map((a)=>a.DAUID),
               chartY:res.map((b)=>b.Index)
           });
 
@@ -219,6 +273,49 @@ class DashBoard extends React.Component{
        });
     }
 
+    methodStat = (value) => {
+
+        console.log(value,this.state.stat);
+        if(value==="PCA"){
+            this.setState({
+              method:'pca'
+            })
+        }
+        else{
+          this.setState({
+              method:'lc'
+          })
+        }
+    }
+    handleHover = (data) => {
+       console.log(data.points[0].value);
+       console.log(data.points[0].x);
+       console.log(this.state.chartX[data.points[0].x]);
+       var cdauid=this.state.chartX[data.points[0].x];
+       var indexWeight=this.state.indexWeight
+       for (var key in indexWeight){
+           indexWeight[key]=1
+           if(key==cdauid){
+              indexWeight[key]=6
+           }
+       }
+       this.setState({
+          indexWeight:indexWeight
+       })
+       console.log(this.state.indexWeight[cdauid]);
+    }
+    handleDateChange= (value) => {
+
+        this.setState({
+
+           datequery:value
+        })
+        var res2={}
+        res2['d1']=this.state.datequery+'/01/01'
+        res2['d2']=this.state.datequery+'/12/31'
+        console.log(res2);
+    }
+
   render(){
    
    return(
@@ -233,6 +330,9 @@ class DashBoard extends React.Component{
         
         
         <Setting onClick={(value)=>this.setStat(value)}/>
+        <MethodSetting onClick={(methodvalue)=>this.methodStat(methodvalue)}/>
+        <TextStyle variation="subdued">Date Period for Indicators</TextStyle>
+        <Ranger min={2005} max={2017} onChange={(value)=>this.handleDateChange(value)}/>
       </Card.Section>
       <Card.Section title="Items">
       <Scrollable shadow style={{height: '40vh'}}>
@@ -242,7 +342,7 @@ class DashBoard extends React.Component{
     </Card>
   </Layout.Section>
   <Layout.Section primary>
-  <Maps genres={this.state.gresult} gendata={this.state.gdata} ajaxload={this.state.ajaxLoading} intres={this.state.iresult} intdata={this.state.idata}/>
+  <Maps genres={this.state.gresult} gendata={this.state.gdata} ajaxload={this.state.ajaxLoading} intres={this.state.iresult} intdata={this.state.idata} iweight={this.state.indexWeight}/>
 
   </Layout.Section>
   <Layout.Section>
@@ -288,7 +388,9 @@ class DashBoard extends React.Component{
                                }
                        }
                     ]}
-                    layout={ {width: '30vh', height: '50vh', title: this.state.ititle} }
+                    layout={ {width: '30vh', height: '50vh', title: this.state.ititle}
+                     }
+                     onHover={(data)=>this.handleHover(data)}
                   />):(<p>Waiting for the load</p>)}
       </Scrollable>
       </Card>
