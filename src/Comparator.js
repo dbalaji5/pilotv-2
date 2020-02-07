@@ -146,7 +146,7 @@ class Comparator extends React.Component{
                     <Page fullWidth={true} separator>
                     <Layout>
                         <Layout.Section oneThird primary> 
-                                <Card title="Index1">
+                                <Card title="IndexA">
                                     <Scrollable shadow style={{height: '60vh'}}>
                                     <div>
                                     <ul id="myUL">
@@ -177,7 +177,7 @@ class Comparator extends React.Component{
                                 </Card>
                         </Layout.Section>
                         <Layout.Section oneThird secondary>
-                            <Card title="Index2">
+                            <Card title="IndexB">
                                     <Scrollable shadow style={{height: '60vh'}}>
                                     <div>
                                     <ul id="myUL">
