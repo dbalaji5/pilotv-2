@@ -77,16 +77,16 @@ let geoMapClicks2=0
      getColor = (val) => {
 
 
-      return val>=-1 && val < -0.75? '#67001f':
-             val>=-0.75 && val < -0.6 ? '#b2182b':
-             val>=-0.6 && val < -0.4 ? '#d6604d':
-             val>=-0.4 && val < -0.2 ? '#f4a582':
-             val>=-0.2 && val < 0 ? '#fddbc7':
-             val>=0.01   &&  val <0.1 ? '#d1e5f0':
-             val>=0.1 && val < 0.3 ? '#92c5de':
-             val>=0.3 && val < 0.5 ? '#4393c3':
-             val>=0.5 && val < 0.75 ? '#2166ac':
-             val >= 0.75 && val <= 1 ? '#053061':
+      return val>=-1 && val < -0.75? '#a50026':
+             val>=-0.75 && val < -0.6 ? '#d73027':
+             val>=-0.6 && val < -0.4 ? '#f46d43':
+             val>=-0.4 && val < -0.2 ? '#fdae61':
+             val>=-0.2 && val < 0 ? '#fee08b':
+             val>=0.01   &&  val <0.1 ? '#d9ef8b':
+             val>=0.1 && val < 0.3 ? '#a6d96a':
+             val>=0.3 && val < 0.5 ? '#66bd63':
+             val>=0.5 && val < 0.75 ? '#1a9850':
+             val >= 0.75 && val <= 1 ? '#006837':
              val>=0 && val <0.01 ? '#ffffff':
                                    '#000000';
 
