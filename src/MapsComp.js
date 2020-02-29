@@ -11,17 +11,21 @@ class MapsComp extends React.Component{
         super(props);
         this.state={
             data:[],
+            idata1:[],
+            idata2:[],
             loading:false
         }
     }
     componentDidUpdate(oldProps,oldState){
     
         
-        if(this.props.data !== oldState.data || this.props.loading !== oldState.loading){
+        if(this.props.data !== oldState.data || this.props.loading !== oldState.loading || this.props.idata1 !== oldState.idata1 || this.props.idata2 !== oldState.idata2){
           console.log(this.props.data);
         
             this.setState({
                 data:this.props.data,
+                idata1:this.props.idata1,
+                idata2:this.props.idata2,
                 loading:this.props.loading
             });
           
@@ -63,6 +67,32 @@ class MapsComp extends React.Component{
             }
         }
 
+        var style1 = (feature) => {
+            var checkDauId=feature.properties.DAUID;
+            if(Object.keys(this.state.idata1).length>0){
+                return ({
+                    fillColor: this.getColor(this.state.idata1[checkDauId]),
+                    color:this.getColor(this.state.idata1[checkDauId]),
+                    opacity:1,
+                    fillOpacity:0.3,
+                    weight:0.5
+                });
+            }
+        }
+
+        var style2 = (feature) => {
+            var checkDauId=feature.properties.DAUID;
+            if(Object.keys(this.state.idata2).length>0){
+                return ({
+                    fillColor: this.getColor(this.state.idata2[checkDauId]),
+                    color:this.getColor(this.state.idata2[checkDauId]),
+                    opacity:1,
+                    fillOpacity:0.3,
+                    weight:0.5
+                });
+            }
+        }
+
         return (
           <React.Fragment>
           {(this.state.loading===false)?(
@@ -82,7 +112,20 @@ class MapsComp extends React.Component{
                 style={style}
               />
           </LayersControl.BaseLayer>
-            
+          <LayersControl.BaseLayer name="Index1">
+          <GeoJSON
+                ref="geoindex1"
+                data={diss}
+                style={style1}
+          />    
+          </LayersControl.BaseLayer> 
+          <LayersControl.BaseLayer name="Index2">
+          <GeoJSON
+                ref="geoindex2"
+                data={diss}
+                style={style2}
+           />
+          </LayersControl.BaseLayer>
           </LayersControl>
           </Map>
           ):(<Spinner accessibilityLabel="Spinner example" size="large" color="teal" />)}

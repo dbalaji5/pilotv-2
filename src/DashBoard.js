@@ -11,7 +11,9 @@ import axios from 'axios'
 import Setting from './Setting.js'
 import Plot from 'react-plotly.js';
 import MethodSetting from './MethodSetting.js';
-import Ranger from './Ranger.js'
+ import Ranger from './Ranger.js'
+// import ReactDualRangeSlider from 'react-dual-range-slider';
+// import reactDualRangeSlider from 'react-dual-range-slider/lib/components/react-dual-range-slider';
 class DashBoard extends React.Component{
     constructor(props){
         super(props);
@@ -234,10 +236,24 @@ class DashBoard extends React.Component{
       })
       axios.get('http://localhost:5000/rest/'+cat1+'/',{params:result})
         .then(result => {
+          
+          var tresult=result.data['sums'].map((a) =>{
+              return ({'DAUID':a.DAUID,'Index':Math.abs(a.Index)})
+          })
 
-          var res=result.data['sums'].sort((a,b) => {
+          console.log(tresult);
+
+          var res=tresult.sort((a,b) => {
             return a.Index-b.Index
           })
+
+          console.log(res);
+
+          var tres=result.data['sums'].sort((a,b) => {
+             return a.Index-b.Index
+          })
+
+          console.log(tres);
          
           this.setState({
 
@@ -245,7 +261,7 @@ class DashBoard extends React.Component{
               iresult:result.data['pred'],
               idata:result.data['sums'],
               chartX:res.map((a)=>a.DAUID),
-              chartY:res.map((b)=>b.Index)
+              chartY:res.map((b)=>Math.abs(b.Index))
           });
 
         })
