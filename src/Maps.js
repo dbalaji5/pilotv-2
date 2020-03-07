@@ -43,7 +43,8 @@ let geoMapClicks2=0
           intY:[],
           ajaxload:false,
           cmpload:false,
-          iweight:{}
+          iweight:{},
+          genColor:{}
         };
       }
       componentDidUpdate(oldProps,oldState){
@@ -60,6 +61,7 @@ let geoMapClicks2=0
                 intres:this.props.intres,
                 intdata:this.props.intdata,
                 weight:1,
+                genColor:this.props.gcolor,
                 ajaxload:this.props.ajaxload,
                 iweight:this.props.iweight
             });
@@ -128,7 +130,6 @@ let geoMapClicks2=0
 
             {
                intX:rX,
-               //support@refer.telus.com dexter hugo 
                intY:rY,
                cmpload:true
             }
@@ -208,8 +209,8 @@ let geoMapClicks2=0
             var checkDauId=feature.properties.DAUID;
             if(this.state.gendata.length>0){
                 return ({
-                    fillColor: this.getColor(this.state.genres[checkDauId]),
-                    color:this.getColor(this.state.genres[checkDauId]),
+                    fillColor: this.state.genColor[checkDauId],
+                    color:this.state.genColor[checkDauId],
                     opacity:1,
                     fillOpacity:0.3,
                     weight:this.state.iweight[checkDauId]
