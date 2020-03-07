@@ -39,7 +39,8 @@ class DashBoard extends React.Component{
              ajaxLoading2:true,
              indexWeight:{},
              method:'lc',
-             datequery:2005
+             datequery:2005,
+             genColor:{}
         }
     }
 
@@ -156,6 +157,7 @@ class DashBoard extends React.Component{
         axios.get('http://localhost:5000/rest/'+cat+'/',{params:res})
         .then(result => {
           //console.log(result.data['resu2']);
+          console.log(result.data['sums'])
           var res=result.data['sums'].sort((a,b) => {
             return a.Index-b.Index
           })
@@ -172,6 +174,7 @@ class DashBoard extends React.Component{
                ajaxLoading2:false,
                gresult:result.data['resu2'],
                gdata:result.data['sums'],
+               genColor:result.data['color'],
                indexWeight:indexWeight,
                chartX:res.map((a)=>a.DAUID),
                chartY:res.map((b)=>b.Index)
@@ -358,7 +361,7 @@ class DashBoard extends React.Component{
     </Card>
   </Layout.Section>
   <Layout.Section primary>
-  <Maps genres={this.state.gresult} gendata={this.state.gdata} ajaxload={this.state.ajaxLoading} intres={this.state.iresult} intdata={this.state.idata} iweight={this.state.indexWeight}/>
+  <Maps genres={this.state.gresult} gcolor={this.state.genColor} gendata={this.state.gdata} ajaxload={this.state.ajaxLoading} intres={this.state.iresult} intdata={this.state.idata} iweight={this.state.indexWeight}/>
 
   </Layout.Section>
   <Layout.Section>

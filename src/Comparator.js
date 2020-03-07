@@ -25,7 +25,9 @@ class Comparator extends React.Component{
             compres:{},
             indres1:{},
             indres2:{},
-            loading:false
+            loading:false,
+            indname1:'',
+            indname2:''
         }
 
     }
@@ -113,7 +115,8 @@ class Comparator extends React.Component{
        
         console.log(par);
         this.setState({
-            loading:true
+            loading:true,
+            indname1:par['value']
         })
         axios.get('http://localhost:5000/rest/pie/',{params:par})
         .then(result => {
@@ -134,7 +137,8 @@ class Comparator extends React.Component{
         this.stylesetter(e);   var par={};
         par['value']=e.target.textContent;
         this.setState({
-            loading:true
+            loading:true,
+            indname2:par['value']
         })
         axios.get('http://localhost:5000/rest/pie/',{params:par})
         .then(result => {
@@ -150,6 +154,15 @@ class Comparator extends React.Component{
         })
 
     
+    }
+
+    pieClick =(data) => {
+
+        console.log(data.points[0].label,this.state.indname1);
+    }
+
+    pieClick2 = (data) => {
+        console.log(data.points[0].label,this.state.indname2);
     }
 
     render(){
@@ -186,6 +199,7 @@ class Comparator extends React.Component{
                                                 }
                                                 ]}
                                                 layout={ {width: 400, height: 320, title: this.state.gtitle} }
+                                                onClick={(data)=>this.pieClick(data)}
                                         />):(<p>Waiting for the Selection</p>)}
                                             </div>
                                 </Card>
@@ -217,6 +231,7 @@ class Comparator extends React.Component{
                                                 }
                                                 ]}
                                                 layout={ {width: 400, height: 320, title: this.state.gtitle} }
+                                                onClick={(data)=>this.pieClick2(data)}
                                         />):(<p>Waiting for the Selection</p>)}
                                             </div>
                                 </Card>
@@ -224,7 +239,7 @@ class Comparator extends React.Component{
 
                         <Layout.Section oneHalf>
                             <Card title="Maps">
-                                <MapsComp data={this.state.compres} idata1={this.state.indres1} idata2={this.state.indres2} loading={this.state.loading}/>
+                                <MapsComp data={this.state.compres} indname1={this.state.indname1} indname2={this.state.indname2} idata1={this.state.indres1} idata2={this.state.indres2} loading={this.state.loading}/>
                             </Card>
                         </Layout.Section>
 
